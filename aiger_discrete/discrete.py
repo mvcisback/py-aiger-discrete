@@ -35,6 +35,18 @@ class DiscreteCirc:
         elif self.circ.omap[self.valid_id].size != 1:
             raise Valid_Id(f"Validation output must be size 1.")
 
+    @property
+    def inputs(self): return self.circ.inputs
+
+    @property
+    def outputs(self): return self.circ.outputs - {self.valid_id}
+
+    @property
+    def latches(self): return self.circ.latches
+
+    @property
+    def latch2init(self): return self.circ.latch2init
+
     def __call__(self, inputs, latches=None):
         imap = {
             k: self.input_encodings[k].encode(v) for k, v in inputs.items()
@@ -59,6 +71,7 @@ class DiscreteCirc:
 
     def __rshift__(self, other: DiscreteCirc) -> DiscreteCirc:
         pass
+
 
 
 def from_aigbv(circ: BV.AIGBV, 
