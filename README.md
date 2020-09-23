@@ -1,2 +1,2 @@
 # py-aiger-discrete
-Library for modeling functions over discrete sets using aiger circuits.
+Library for modeling functions over fintes sets using aiger circuits.
