@@ -1,15 +1,19 @@
 from __future__ import annotations
 
-from collections import defaultdict
+import re
 from functools import reduce
-from typing import Any, Callable, Mapping, Optional, Union
+from typing import Any, Callable, Optional, Union
 from uuid import uuid1
 
 import aiger_bv as BV
+import aiger_ptltl as LTL
 import attr
 import funcy as fn
 from pyrsistent import pmap
 from pyrsistent.typing import PMap
+
+
+TIMED_NAME = re.compile(r"(.*)##time_\d+$")
 
 
 def fresh():
@@ -69,6 +73,9 @@ class DiscreteCirc:
     @property
     def latch2init(self): return self.circ.latch2init
 
+    simulator = BV.AIGBV.simulator
+    simulate = BV.AIGBV.simulate
+
     def __call__(self, inputs, latches=None):
         imap = {
             k: self.input_encodings.get(k, DefaultEncoding).encode(v)
@@ -112,6 +119,59 @@ class DiscreteCirc:
     def __lshift__(self, other: Circ) -> DiscreteCirc:
         return canon(other) >> self
 
+    def __getitem__(self, others):
+        kind, relabels = others
+        if kind == 'o' and self.valid_id in relabels:
+            raise ValueError("Use rename_valid to change valid_id.")
+        return attr.evolve(self, circ=self.circ[others])
+
+    def loopback(self, *wirings):
+        return from_aigbv(
+            circ=self.circ.loopback(*wirings),
+            input_encodings=self.input_encodings,
+            output_encodings=self.output_encodings,
+            valid_id=self.valid_id,
+        )
+
+    def unroll(self, horizon, *, init=True, omit_latches=True,
+               only_last_outputs=False):
+        hist_valid = LTL.atom(self.valid_id) \
+                        .historically() \
+                        .with_output(self.valid_id)
+        monitor = BV.aig2aigbv(hist_valid.aig)
+
+        circ = (self.circ >> monitor).unroll(
+            horizon,
+            init=init,
+            omit_latches=omit_latches,
+            only_last_outputs=only_last_outputs
+        )
+
+        if not only_last_outputs:
+            times = range(1, horizon)
+            circ >>= BV.sink(1, (f'{self.valid_id}##time_{t}' for t in times))
+        valid_id = f'{self.valid_id}##time_{horizon}'
+        assert valid_id in circ.outputs
+
+        input_encodings = timed_encodings(self.input_encodings, circ.inputs)
+        output_encodings = timed_encodings(self.output_encodings, circ.outputs)
+        return from_aigbv(
+            circ=circ,
+            input_encodings=input_encodings,
+            output_encodings=output_encodings,
+            valid_id=valid_id,
+        )
+
+
+def timed_encodings(old_encodings, timed_names):
+    encodings = {}
+    for timed_name in timed_names:
+        name = TIMED_NAME.match(timed_name).group()[0]
+        if name not in old_encodings:
+            continue
+        encodings[timed_name] = old_encodings[name]
+    return encodings
+
 
 Circ = Union[DiscreteCirc, BV.AIGBV]
 
@@ -127,7 +187,7 @@ def canon(circ: Circ) -> DiscreteCirc:
 
 
 def omit(mapping, keys):
-    return reduce(lambda m, k: m.discard(k), keys, mapping)
+    return reduce(lambda m, k: m.discard(k), keys, pmap(mapping))
 
 
 def project(mapping, keys):
@@ -145,13 +205,14 @@ def from_aigbv(circ: BV.AIGBV,
     if valid_id not in circ.outputs:
         circ |= BV.uatom(1, 1).with_output(valid_id).aigbv
 
-    input_encodings = project(pmap(input_encodings), circ.inputs)
-    output_encodings = project(pmap(output_encodings), circ.outputs - {valid_id})
+    input_encodings = project(input_encodings, circ.inputs)
+    output_encodings = project(output_encodings, circ.outputs - {valid_id})
 
     return DiscreteCirc(
         circ=circ,
         input_encodings=input_encodings,
         output_encodings=output_encodings,
+        valid_id=valid_id,
     )
 
 

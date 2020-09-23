@@ -311,6 +311,17 @@ py-aiger = ">=6.1.2,<7.0.0"
 pyrsistent = ">=0.17,<0.18"
 
 [[package]]
+category = "main"
+description = "Library for generating (p)ast (t)ense (l)inear (t)emporal (l)ogic monitors as aiger circuits."
+name = "py-aiger-ptltl"
+optional = false
+python-versions = ">=3.7,<4.0"
+version = "3.0.1"
+
+[package.dependencies]
+py-aiger = ">=6.0.0,<7.0.0"
+
+[[package]]
 category = "dev"
 description = "Python style guide checker"
 name = "pycodestyle"
@@ -473,7 +484,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "fe120a370f856f7db3894048daf53821afdd9200d89240e2a98f87441b842b2c"
+content-hash = "0bcf5817f748e4722a6aaa250e65877de2129b0e57594802a8f454c52ad9e015"
 lock-version = "1.0"
 python-versions = "^3.7"
 
@@ -642,6 +653,10 @@ py-aiger = [
 py-aiger-bv = [
     {file = "py-aiger-bv-4.3.2.tar.gz", hash = "sha256:312cc57ff033c5a487204cbe4db84c11ad912f46764391d59bc007e4a0f63d24"},
     {file = "py_aiger_bv-4.3.2-py3-none-any.whl", hash = "sha256:510d857d1c767d436a9dcbdde938b99dce3bca9840c22e1b1634558f067e460e"},
+]
+py-aiger-ptltl = [
+    {file = "py-aiger-ptltl-3.0.1.tar.gz", hash = "sha256:fc5356ee2c184b6b9e3217ffe3bf69adc917f404ebef82a0948428bd3df34833"},
+    {file = "py_aiger_ptltl-3.0.1-py3-none-any.whl", hash = "sha256:2ddd3168be18ccfae91bbab33611d117bbf74f2c584c592a627ee1446bb70f17"},
 ]
 pycodestyle = [
     {file = "pycodestyle-2.6.0-py2.py3-none-any.whl", hash = "sha256:2295e7b2f6b5bd100585ebcb1f616591b652db8a741695b3d8f5d28bdc934367"},

@@ -10,6 +10,7 @@ python = "^3.7"
 py-aiger-bv = "^4.3.0"
 funcy = "^1.14"
 pyrsistent = "^0.17.3"
+py-aiger-ptltl = "^3.0.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.0.1"
