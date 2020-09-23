@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from functools import reduce
 from typing import Any, Callable, Mapping, Optional, Union
 from uuid import uuid1
 
 import aiger_bv as BV
 import attr
 import funcy as fn
+from pyrsistent import pmap
+from pyrsistent.typing import PMap
 
 
 def fresh():
@@ -20,18 +23,15 @@ class Encoding:
     decode: Callable[[int], Any] = fn.identity
 
 
-Encodings = Mapping[str, Encoding]
+DefaultEncoding = Encoding()
+Encodings = PMap[str, Encoding]
 
 
 @attr.s(auto_attribs=True, frozen=True)
 class DiscreteCirc:
     circ: BV.AIGBV
-    input_encodings: Encodings = attr.ib(
-        converter=lambda x: defaultdict(Encoding, x),
-    )
-    output_encodings: Encodings = attr.ib(
-        converter=lambda x: defaultdict(Encoding, x),
-    )
+    input_encodings: Encodings = attr.ib(converter=pmap)
+    output_encodings: Encodings = attr.ib(converter=pmap)
     valid_id: str = "##valid"
 
     def __attrs_post_init__(self):
@@ -71,7 +71,8 @@ class DiscreteCirc:
 
     def __call__(self, inputs, latches=None):
         imap = {
-            k: self.input_encodings[k].encode(v) for k, v in inputs.items()
+            k: self.input_encodings.get(k, DefaultEncoding).encode(v)
+            for k, v in inputs.items()
         }
         omap, lmap = self.circ(imap, latches=latches)
 
@@ -81,34 +82,56 @@ class DiscreteCirc:
         del omap[self.valid_id]
 
         omap = {
-            k: self.output_encodings[k].decode(v) for k, v in omap.items()
+            k: self.output_encodings.get(k, DefaultEncoding).decode(v)
+            for k, v in omap.items()
         }
         return omap, lmap
 
-    def __or__(self, other: Union[DiscreteCirc, BV.AIGBV]) -> DiscreteCirc:
+    def __or__(self, other: Circ) -> DiscreteCirc:
         other: DiscreteCirc = canon(other)
-        both_valid = (self._vexpr & other._vexpr).with_output(self.valid_id)
-        circ = (self.circ | other.circ) >> both_valid.aigbv
+        circ = (self.circ | other.circ) >> both_valid(self, other)
+
+        # TODO: project to important inputs.
         return from_aigbv(
             circ=circ,
-            input_encodings=fn.merge(other.input_encodings,
-                                     self.input_encodings),
-            output_encodings=fn.merge(other.output_encodings,
-                                      self.output_encodings),
+            input_encodings=self.input_encodings + other.input_encodings,
+            output_encodings=self.output_encodings + other.output_encodings,
             valid_id=self.valid_id
         )
 
-    def __lshift__(self, other: DiscreteCirc) -> DiscreteCirc:
-        pass
+    def __rshift__(self, other: Circ) -> DiscreteCirc:
+        other: DiscreteCirc = canon(other)
+        circ = (self.circ >> other.circ) >> both_valid(self, other)
+        return from_aigbv(
+            circ=circ,
+            input_encodings=other.input_encodings + self.input_encodings,
+            output_encodings=self.output_encodings + other.output_encodings,
+            valid_id=self.valid_id
+        )
 
-    def __rshift__(self, other: DiscreteCirc) -> DiscreteCirc:
-        pass
+    def __lshift__(self, other: Circ) -> DiscreteCirc:
+        return canon(other) >> self
 
 
-def canon(circ: Union[BV.AIGBV, DiscreteCirc]):
+Circ = Union[DiscreteCirc, BV.AIGBV]
+
+
+def both_valid(left: DiscreteCirc, right: DiscreteCirc) -> BV.AIGBV:
+    return (left._vexpr & right._vexpr).with_output(left.valid_id).aigbv
+
+
+def canon(circ: Circ) -> DiscreteCirc:
     if not isinstance(circ, DiscreteCirc):
         circ = from_aigbv(circ)
     return circ.rename_valid()
+
+
+def omit(mapping, keys):
+    return reduce(lambda m, k: m.discard(k), keys, mapping)
+
+
+def project(mapping, keys):
+    return omit(mapping, set(mapping.keys()) - keys)
 
 
 def from_aigbv(circ: BV.AIGBV,
@@ -121,6 +144,9 @@ def from_aigbv(circ: BV.AIGBV,
         output_encodings = {}
     if valid_id not in circ.outputs:
         circ |= BV.uatom(1, 1).with_output(valid_id).aigbv
+
+    input_encodings = project(pmap(input_encodings), circ.inputs)
+    output_encodings = project(pmap(output_encodings), circ.outputs - {valid_id})
 
     return DiscreteCirc(
         circ=circ,
