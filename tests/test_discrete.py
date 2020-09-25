@@ -145,7 +145,7 @@ def test_readme():
     )
 
     # Create function which maps: A -> B, B -> C, C -> D, D -> E.
-    x = BV.uatom(3, 'x')  # Need 3 bits to capture 5 input types.    
+    x = BV.uatom(3, 'x')  # Need 3 bits to capture 5 input types.
     update_expr = (x < 4).repeat(3) & (x + 1)  # 0 if x < 4 else x + 1.
     circ = update_expr.with_output('y').aigbv
 

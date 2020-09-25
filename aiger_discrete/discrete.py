@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from functools import reduce
-from typing import Any, Callable, Optional, Union, Sequence
+from typing import Any, Callable, Optional, Union
 from uuid import uuid1
 
 import aiger_bv as BV
@@ -178,6 +178,7 @@ def decode_outputs(outputs, encodings):
         if key in encodings:
             val = encodings[key].decode(val)
         yield key, val
+
 
 def timed_encodings(old_encodings, timed_names):
     encodings = {}
