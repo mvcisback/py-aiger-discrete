@@ -111,15 +111,24 @@ or unrolling:
 func_unrolled = func1.unroll(5)
 ```
 
-or feedback:
+or feedback: 
+
 
 ```python
 func_cycle = func1.loopback({
     'input': 'x',
     'output': 'y',
     'keep_output': True,
+    `input_encoder`: True,
+    `init`: 'A',
 })
 ```
+
+Note that feedback now supports additional flag per wiring description
+called `input_encoder` which determines if the input or output
+encoding is used for initial latch value resp. The default is the
+input encoding.
+
 
 or renaming:
 ```python

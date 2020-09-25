@@ -121,7 +121,31 @@ class FiniteFunc:
             raise ValueError("Use rename_valid to change valid_id.")
         return attr.evolve(self, circ=self.circ[others])
 
+    def _encode_wiring(self, wiring):
+        if 'init' not in wiring:
+            return wiring
+
+        wiring = dict(wiring)  # copy to avoid side-effect.
+
+        name, init = wiring['input'], wiring['init']
+
+        if wiring.get('input_encoding', True):
+            encodings = self.input_encodings
+        else:
+            encodings = self.output_encodings
+
+        if name in encodings:
+            init = wiring['encoding'].encode(init)
+
+        assert isinstance(init, int)
+
+        size = self.circ.imap[name].size
+        wiring['init'] = BV.encode_int(size, init, signed=False)
+        return wiring
+
     def loopback(self, *wirings):
+        wirings = map(self._encode_wiring, wirings)
+
         return from_aigbv(
             circ=self.circ.loopback(*wirings),
             input_encodings=self.input_encodings,

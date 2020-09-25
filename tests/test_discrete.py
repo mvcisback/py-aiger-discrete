@@ -124,7 +124,7 @@ def test_loopback_and_unroll():
     func2 = func1.loopback({
         'input': 'x', 'output': 'y',
         'keep_output': True,
-        'init': (False, False, False),
+        'init': 0,
     })
     assert func2.simulate([{'y': 1}, {'y': 1}])[-1][0] == {'y': 2}
     with pytest.raises(ValueError):
