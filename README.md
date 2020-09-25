@@ -126,3 +126,4 @@ or renaming:
 func_renamed = func1['i', {'x': 'z'}]
 assert func1.inputs == {'z'}
 ```
+
