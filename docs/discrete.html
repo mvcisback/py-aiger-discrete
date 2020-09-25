@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>aiger_discrete.discrete API documentation</title>
+<meta name="description" content="Functions/Classes for modeling Finite Functions as And Inverter Graphs." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>aiger_discrete.discrete</code></h1>
+</header>
+<section id="section-intro">
+<p>Functions/Classes for modeling Finite Functions as And Inverter Graphs.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;Functions/Classes for modeling Finite Functions as And Inverter Graphs.&#34;&#34;&#34;
+
+from __future__ import annotations
+
+import re
+from functools import reduce
+from typing import Any, Callable, Optional, Union
+from uuid import uuid1
+
+import aiger_bv as BV
+import aiger_ptltl as LTL
+import attr
+import funcy as fn
+from pyrsistent import pmap
+from pyrsistent.typing import PMap
+
+
+TIMED_NAME = re.compile(r&#34;(.*)##time_\d+$&#34;)
+
+
+def fresh():
+    return str(uuid1())
+
+
+@attr.s(auto_attribs=True, frozen=True)
+class Encoding:
+    &#34;&#34;&#34;Encodes/decodes finite domain to and from bit sequences (ints).&#34;&#34;&#34;
+    encode: Callable[[Any], int] = fn.identity
+    decode: Callable[[int], Any] = fn.identity
+
+
+DefaultEncoding = Encoding()
+Encodings = PMap[str, Encoding]
+
+
+@attr.s(auto_attribs=True, frozen=True)
+class FiniteFunc:
+    circ: BV.AIGBV
+    input_encodings: Encodings = attr.ib(converter=pmap)
+    output_encodings: Encodings = attr.ib(converter=pmap)
+    valid_id: str = &#34;##valid&#34;
+
+    def __attrs_post_init__(self):
+        if self.valid_id not in self.circ.outputs:
+            raise ValueError(f&#34;Missing validation output: {self.valid_id}.&#34;)
+        elif self.circ.omap[self.valid_id].size != 1:
+            raise ValueError(&#34;Validation output must be size 1.&#34;)
+
+    def rename_valid(self, name: Optional[str] = None) -&gt; FiniteFunc:
+        if name is None:
+            name = fresh()
+        if name in self.outputs:
+            raise ValueError(f&#34;{name} conflicts with current outputs.&#34;)
+        circ = self.circ[&#39;o&#39;, {self.valid_id: name}]
+        return attr.evolve(self, circ=circ, valid_id=name)
+
+    def assume(self, pred: BV.AIGBV) -&gt; FiniteFunc:
+        assert len(pred.outputs) == 1
+        func = from_aigbv(pred.outputs, valid_id=fn.first(pred.outputs))
+        return self | func
+
+    @property
+    def _vexpr(self):
+        return BV.uatom(1, self.valid_id)
+
+    @property
+    def inputs(self): return self.circ.inputs
+
+    @property
+    def outputs(self): return self.circ.outputs - {self.valid_id}
+
+    @property
+    def latches(self): return self.circ.latches
+
+    @property
+    def latch2init(self): return self.circ.latch2init
+
+    simulator = BV.AIGBV.simulator
+    simulate = BV.AIGBV.simulate
+
+    def __call__(self, inputs, latches=None):
+        inputs = encode_inputs(inputs, self.circ.imap, self.input_encodings)
+        omap, lmap = self.circ(dict(inputs), latches=latches)
+
+        valid, *_ = omap[self.valid_id]
+        if not valid:
+            raise ValueError(f&#34;Invalid inputs: {inputs}&#34;)
+        del omap[self.valid_id]
+
+        omap = dict(decode_outputs(omap, self.output_encodings))
+        return omap, lmap
+
+    def __or__(self, other: Circ) -&gt; FiniteFunc:
+        other: FiniteFunc = canon(other)
+        circ = (self.circ | other.circ) &gt;&gt; both_valid(self, other)
+
+        # TODO: project to important inputs.
+        return from_aigbv(
+            circ=circ,
+            input_encodings=self.input_encodings + other.input_encodings,
+            output_encodings=self.output_encodings + other.output_encodings,
+            valid_id=self.valid_id
+        )
+
+    def __rshift__(self, other: Circ) -&gt; FiniteFunc:
+        other: FiniteFunc = canon(other)
+        circ = (self.circ &gt;&gt; other.circ) &gt;&gt; both_valid(self, other)
+        return from_aigbv(
+            circ=circ,
+            input_encodings=other.input_encodings + self.input_encodings,
+            output_encodings=self.output_encodings + other.output_encodings,
+            valid_id=self.valid_id
+        )
+
+    def __lshift__(self, other: Circ) -&gt; FiniteFunc:
+        return canon(other) &gt;&gt; self
+
+    def __getitem__(self, others):
+        kind, relabels = others
+        if kind == &#39;o&#39; and self.valid_id in relabels:
+            raise ValueError(&#34;Use rename_valid to change valid_id.&#34;)
+        return attr.evolve(self, circ=self.circ[others])
+
+    def _encode_wiring(self, wiring):
+        if &#39;init&#39; not in wiring:
+            return wiring
+
+        wiring = dict(wiring)  # copy to avoid side-effect.
+
+        name, init = wiring[&#39;input&#39;], wiring[&#39;init&#39;]
+
+        if wiring.get(&#39;input_encoding&#39;, True):
+            encodings = self.input_encodings
+        else:
+            encodings = self.output_encodings
+
+        if name in encodings:
+            init = wiring[&#39;encoding&#39;].encode(init)
+
+        assert isinstance(init, int)
+
+        size = self.circ.imap[name].size
+        wiring[&#39;init&#39;] = BV.encode_int(size, init, signed=False)
+        return wiring
+
+    def loopback(self, *wirings):
+        wirings = map(self._encode_wiring, wirings)
+
+        return from_aigbv(
+            circ=self.circ.loopback(*wirings),
+            input_encodings=self.input_encodings,
+            output_encodings=self.output_encodings,
+            valid_id=self.valid_id,
+        )
+
+    def unroll(self, horizon, *, init=True, omit_latches=True,
+               only_last_outputs=False):
+        hist_valid = LTL.atom(self.valid_id) \
+                        .historically() \
+                        .with_output(self.valid_id)
+        monitor = BV.aig2aigbv(hist_valid.aig)
+
+        circ = (self.circ &gt;&gt; monitor).unroll(
+            horizon,
+            init=init,
+            omit_latches=omit_latches,
+            only_last_outputs=only_last_outputs
+        )
+
+        if not only_last_outputs:
+            times = range(1, horizon)
+            circ &gt;&gt;= BV.sink(1, (f&#39;{self.valid_id}##time_{t}&#39; for t in times))
+        valid_id = f&#39;{self.valid_id}##time_{horizon}&#39;
+        assert valid_id in circ.outputs
+
+        input_encodings = timed_encodings(self.input_encodings, circ.inputs)
+        output_encodings = timed_encodings(self.output_encodings, circ.outputs)
+        return from_aigbv(
+            circ=circ,
+            input_encodings=input_encodings,
+            output_encodings=output_encodings,
+            valid_id=valid_id,
+        )
+
+
+def encode_inputs(inputs, imap, encodings):
+    for key, val in inputs.items():
+        size = imap[key].size
+        if key in encodings:  # Convert to tuple of bools.
+            val = encodings[key].encode(val)
+
+        assert isinstance(val, int)
+        val = BV.encode_int(size, val, signed=False)
+
+        assert len(val) == size
+        yield key, val
+
+
+def decode_outputs(outputs, encodings):
+    for key, val in outputs.items():
+        val = BV.decode_int(val, signed=False)
+        if key in encodings:
+            val = encodings[key].decode(val)
+        yield key, val
+
+
+def timed_encodings(old_encodings, timed_names):
+    encodings = {}
+    for timed_name in timed_names:
+        name = TIMED_NAME.match(timed_name).group()[0]
+        if name not in old_encodings:
+            continue
+        encodings[timed_name] = old_encodings[name]
+
+    return encodings
+
+
+Circ = Union[FiniteFunc, BV.AIGBV]
+
+
+def both_valid(left: FiniteFunc, right: FiniteFunc) -&gt; BV.AIGBV:
+    return (left._vexpr &amp; right._vexpr).with_output(left.valid_id).aigbv
+
+
+def canon(circ: Circ) -&gt; FiniteFunc:
+    if not isinstance(circ, FiniteFunc):
+        circ = from_aigbv(circ)
+    return circ.rename_valid()
+
+
+def omit(mapping, keys):
+    return reduce(lambda m, k: m.discard(k), keys, pmap(mapping))
+
+
+def project(mapping, keys):
+    return omit(mapping, set(mapping.keys()) - keys)
+
+
+def from_aigbv(circ: BV.AIGBV,
+               input_encodings: Encodings = None,
+               output_encodings: Encodings = None,
+               valid_id=&#34;##valid&#34;) -&gt; FiniteFunc:
+    &#34;&#34;&#34;Lift an bit-vector into a function over finite sets.
+
+    Note: if `valid_id` is not present as an output of `circ`, then it
+      will be added, and will always output True.
+
+    Args:
+     - input_encodings: Maps an input to an encoder. Default is identity.
+     - output_encodings: Maps an output to an encoder. Default is identity.
+     - valid_id: Denotes which output monitors if inputs are &#34;valid&#34;.
+    &#34;&#34;&#34;
+    if input_encodings is None:
+        input_encodings = {}
+    if output_encodings is None:
+        output_encodings = {}
+    if valid_id not in circ.outputs:
+        circ |= BV.uatom(1, 1).with_output(valid_id).aigbv
+
+    input_encodings = project(input_encodings, circ.inputs)
+    output_encodings = project(output_encodings, circ.outputs - {valid_id})
+
+    return FiniteFunc(
+        circ=circ,
+        input_encodings=input_encodings,
+        output_encodings=output_encodings,
+        valid_id=valid_id,
+    )
+
+
+__all__ = [&#39;Encoding&#39;, &#39;FiniteFunc&#39;, &#39;from_aigbv&#39;]</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="aiger_discrete.discrete.from_aigbv"><code class="name flex">
+<span>def <span class="ident">from_aigbv</span></span>(<span>circ: BV.AIGBV, input_encodings: Encodings = None, output_encodings: Encodings = None, valid_id='##valid') ‑> <a title="aiger_discrete.discrete.FiniteFunc" href="#aiger_discrete.discrete.FiniteFunc">FiniteFunc</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Lift an bit-vector into a function over finite sets.</p>
+<p>Note: if <code>valid_id</code> is not present as an output of <code>circ</code>, then it
+will be added, and will always output True.</p>
+<p>Args:
+- input_encodings: Maps an input to an encoder. Default is identity.
+- output_encodings: Maps an output to an encoder. Default is identity.
+- valid_id: Denotes which output monitors if inputs are "valid".</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def from_aigbv(circ: BV.AIGBV,
+               input_encodings: Encodings = None,
+               output_encodings: Encodings = None,
+               valid_id=&#34;##valid&#34;) -&gt; FiniteFunc:
+    &#34;&#34;&#34;Lift an bit-vector into a function over finite sets.
+
+    Note: if `valid_id` is not present as an output of `circ`, then it
+      will be added, and will always output True.
+
+    Args:
+     - input_encodings: Maps an input to an encoder. Default is identity.
+     - output_encodings: Maps an output to an encoder. Default is identity.
+     - valid_id: Denotes which output monitors if inputs are &#34;valid&#34;.
+    &#34;&#34;&#34;
+    if input_encodings is None:
+        input_encodings = {}
+    if output_encodings is None:
+        output_encodings = {}
+    if valid_id not in circ.outputs:
+        circ |= BV.uatom(1, 1).with_output(valid_id).aigbv
+
+    input_encodings = project(input_encodings, circ.inputs)
+    output_encodings = project(output_encodings, circ.outputs - {valid_id})
+
+    return FiniteFunc(
+        circ=circ,
+        input_encodings=input_encodings,
+        output_encodings=output_encodings,
+        valid_id=valid_id,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="aiger_discrete.discrete.Encoding"><code class="flex name class">
+<span>class <span class="ident">Encoding</span></span>
+<span>(</span><span>encode: Callable[[Any], int] = &lt;function identity&gt;, decode: Callable[[int], Any] = &lt;function identity&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Encodes/decodes finite domain to and from bit sequences (ints).</p>
+<p>Method generated by attrs for class Encoding.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Encoding:
+    &#34;&#34;&#34;Encodes/decodes finite domain to and from bit sequences (ints).&#34;&#34;&#34;
+    encode: Callable[[Any], int] = fn.identity
+    decode: Callable[[int], Any] = fn.identity</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="aiger_discrete.discrete.Encoding.decode"><code class="name">var <span class="ident">decode</span> : Callable[[int], Any]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="aiger_discrete.discrete.Encoding.encode"><code class="name">var <span class="ident">encode</span> : Callable[[Any], int]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="aiger_discrete.discrete.FiniteFunc"><code class="flex name class">
+<span>class <span class="ident">FiniteFunc</span></span>
+<span>(</span><span>circ: BV.AIGBV, input_encodings, output_encodings, valid_id: str = '##valid')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Method generated by attrs for class FiniteFunc.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FiniteFunc:
+    circ: BV.AIGBV
+    input_encodings: Encodings = attr.ib(converter=pmap)
+    output_encodings: Encodings = attr.ib(converter=pmap)
+    valid_id: str = &#34;##valid&#34;
+
+    def __attrs_post_init__(self):
+        if self.valid_id not in self.circ.outputs:
+            raise ValueError(f&#34;Missing validation output: {self.valid_id}.&#34;)
+        elif self.circ.omap[self.valid_id].size != 1:
+            raise ValueError(&#34;Validation output must be size 1.&#34;)
+
+    def rename_valid(self, name: Optional[str] = None) -&gt; FiniteFunc:
+        if name is None:
+            name = fresh()
+        if name in self.outputs:
+            raise ValueError(f&#34;{name} conflicts with current outputs.&#34;)
+        circ = self.circ[&#39;o&#39;, {self.valid_id: name}]
+        return attr.evolve(self, circ=circ, valid_id=name)
+
+    def assume(self, pred: BV.AIGBV) -&gt; FiniteFunc:
+        assert len(pred.outputs) == 1
+        func = from_aigbv(pred.outputs, valid_id=fn.first(pred.outputs))
+        return self | func
+
+    @property
+    def _vexpr(self):
+        return BV.uatom(1, self.valid_id)
+
+    @property
+    def inputs(self): return self.circ.inputs
+
+    @property
+    def outputs(self): return self.circ.outputs - {self.valid_id}
+
+    @property
+    def latches(self): return self.circ.latches
+
+    @property
+    def latch2init(self): return self.circ.latch2init
+
+    simulator = BV.AIGBV.simulator
+    simulate = BV.AIGBV.simulate
+
+    def __call__(self, inputs, latches=None):
+        inputs = encode_inputs(inputs, self.circ.imap, self.input_encodings)
+        omap, lmap = self.circ(dict(inputs), latches=latches)
+
+        valid, *_ = omap[self.valid_id]
+        if not valid:
+            raise ValueError(f&#34;Invalid inputs: {inputs}&#34;)
+        del omap[self.valid_id]
+
+        omap = dict(decode_outputs(omap, self.output_encodings))
+        return omap, lmap
+
+    def __or__(self, other: Circ) -&gt; FiniteFunc:
+        other: FiniteFunc = canon(other)
+        circ = (self.circ | other.circ) &gt;&gt; both_valid(self, other)
+
+        # TODO: project to important inputs.
+        return from_aigbv(
+            circ=circ,
+            input_encodings=self.input_encodings + other.input_encodings,
+            output_encodings=self.output_encodings + other.output_encodings,
+            valid_id=self.valid_id
+        )
+
+    def __rshift__(self, other: Circ) -&gt; FiniteFunc:
+        other: FiniteFunc = canon(other)
+        circ = (self.circ &gt;&gt; other.circ) &gt;&gt; both_valid(self, other)
+        return from_aigbv(
+            circ=circ,
+            input_encodings=other.input_encodings + self.input_encodings,
+            output_encodings=self.output_encodings + other.output_encodings,
+            valid_id=self.valid_id
+        )
+
+    def __lshift__(self, other: Circ) -&gt; FiniteFunc:
+        return canon(other) &gt;&gt; self
+
+    def __getitem__(self, others):
+        kind, relabels = others
+        if kind == &#39;o&#39; and self.valid_id in relabels:
+            raise ValueError(&#34;Use rename_valid to change valid_id.&#34;)
+        return attr.evolve(self, circ=self.circ[others])
+
+    def _encode_wiring(self, wiring):
+        if &#39;init&#39; not in wiring:
+            return wiring
+
+        wiring = dict(wiring)  # copy to avoid side-effect.
+
+        name, init = wiring[&#39;input&#39;], wiring[&#39;init&#39;]
+
+        if wiring.get(&#39;input_encoding&#39;, True):
+            encodings = self.input_encodings
+        else:
+            encodings = self.output_encodings
+
+        if name in encodings:
+            init = wiring[&#39;encoding&#39;].encode(init)
+
+        assert isinstance(init, int)
+
+        size = self.circ.imap[name].size
+        wiring[&#39;init&#39;] = BV.encode_int(size, init, signed=False)
+        return wiring
+
+    def loopback(self, *wirings):
+        wirings = map(self._encode_wiring, wirings)
+
+        return from_aigbv(
+            circ=self.circ.loopback(*wirings),
+            input_encodings=self.input_encodings,
+            output_encodings=self.output_encodings,
+            valid_id=self.valid_id,
+        )
+
+    def unroll(self, horizon, *, init=True, omit_latches=True,
+               only_last_outputs=False):
+        hist_valid = LTL.atom(self.valid_id) \
+                        .historically() \
+                        .with_output(self.valid_id)
+        monitor = BV.aig2aigbv(hist_valid.aig)
+
+        circ = (self.circ &gt;&gt; monitor).unroll(
+            horizon,
+            init=init,
+            omit_latches=omit_latches,
+            only_last_outputs=only_last_outputs
+        )
+
+        if not only_last_outputs:
+            times = range(1, horizon)
+            circ &gt;&gt;= BV.sink(1, (f&#39;{self.valid_id}##time_{t}&#39; for t in times))
+        valid_id = f&#39;{self.valid_id}##time_{horizon}&#39;
+        assert valid_id in circ.outputs
+
+        input_encodings = timed_encodings(self.input_encodings, circ.inputs)
+        output_encodings = timed_encodings(self.output_encodings, circ.outputs)
+        return from_aigbv(
+            circ=circ,
+            input_encodings=input_encodings,
+            output_encodings=output_encodings,
+            valid_id=valid_id,
+        )</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="aiger_discrete.discrete.FiniteFunc.circ"><code class="name">var <span class="ident">circ</span> : aiger_bv.aigbv.AIGBV</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="aiger_discrete.discrete.FiniteFunc.input_encodings"><code class="name">var <span class="ident">input_encodings</span> : pyrsistent.typing.PMap[str, <a title="aiger_discrete.discrete.Encoding" href="#aiger_discrete.discrete.Encoding">Encoding</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="aiger_discrete.discrete.FiniteFunc.output_encodings"><code class="name">var <span class="ident">output_encodings</span> : pyrsistent.typing.PMap[str, <a title="aiger_discrete.discrete.Encoding" href="#aiger_discrete.discrete.Encoding">Encoding</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="aiger_discrete.discrete.FiniteFunc.valid_id"><code class="name">var <span class="ident">valid_id</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="aiger_discrete.discrete.FiniteFunc.inputs"><code class="name">var <span class="ident">inputs</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def inputs(self): return self.circ.inputs</code></pre>
+</details>
+</dd>
+<dt id="aiger_discrete.discrete.FiniteFunc.latch2init"><code class="name">var <span class="ident">latch2init</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def latch2init(self): return self.circ.latch2init</code></pre>
+</details>
+</dd>
+<dt id="aiger_discrete.discrete.FiniteFunc.latches"><code class="name">var <span class="ident">latches</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def latches(self): return self.circ.latches</code></pre>
+</details>
+</dd>
+<dt id="aiger_discrete.discrete.FiniteFunc.outputs"><code class="name">var <span class="ident">outputs</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def outputs(self): return self.circ.outputs - {self.valid_id}</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="aiger_discrete.discrete.FiniteFunc.assume"><code class="name flex">
+<span>def <span class="ident">assume</span></span>(<span>self, pred: BV.AIGBV) ‑> <a title="aiger_discrete.discrete.FiniteFunc" href="#aiger_discrete.discrete.FiniteFunc">FiniteFunc</a></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def assume(self, pred: BV.AIGBV) -&gt; FiniteFunc:
+    assert len(pred.outputs) == 1
+    func = from_aigbv(pred.outputs, valid_id=fn.first(pred.outputs))
+    return self | func</code></pre>
+</details>
+</dd>
+<dt id="aiger_discrete.discrete.FiniteFunc.loopback"><code class="name flex">
+<span>def <span class="ident">loopback</span></span>(<span>self, *wirings)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def loopback(self, *wirings):
+    wirings = map(self._encode_wiring, wirings)
+
+    return from_aigbv(
+        circ=self.circ.loopback(*wirings),
+        input_encodings=self.input_encodings,
+        output_encodings=self.output_encodings,
+        valid_id=self.valid_id,
+    )</code></pre>
+</details>
+</dd>
+<dt id="aiger_discrete.discrete.FiniteFunc.rename_valid"><code class="name flex">
+<span>def <span class="ident">rename_valid</span></span>(<span>self, name: Optional[str] = None) ‑> <a title="aiger_discrete.discrete.FiniteFunc" href="#aiger_discrete.discrete.FiniteFunc">FiniteFunc</a></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rename_valid(self, name: Optional[str] = None) -&gt; FiniteFunc:
+    if name is None:
+        name = fresh()
+    if name in self.outputs:
+        raise ValueError(f&#34;{name} conflicts with current outputs.&#34;)
+    circ = self.circ[&#39;o&#39;, {self.valid_id: name}]
+    return attr.evolve(self, circ=circ, valid_id=name)</code></pre>
+</details>
+</dd>
+<dt id="aiger_discrete.discrete.FiniteFunc.simulate"><code class="name flex">
+<span>def <span class="ident">simulate</span></span>(<span>self, input_seq, latches=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def simulate(self, input_seq, latches=None):
+    sim = self.simulator()
+    next(sim)
+    return [sim.send(inputs) for inputs in input_seq]</code></pre>
+</details>
+</dd>
+<dt id="aiger_discrete.discrete.FiniteFunc.simulator"><code class="name flex">
+<span>def <span class="ident">simulator</span></span>(<span>self, latches=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def simulator(self, latches=None):
+    inputs = yield
+    while True:
+        outputs, latches = self(inputs, latches)
+        inputs = yield outputs, latches</code></pre>
+</details>
+</dd>
+<dt id="aiger_discrete.discrete.FiniteFunc.unroll"><code class="name flex">
+<span>def <span class="ident">unroll</span></span>(<span>self, horizon, *, init=True, omit_latches=True, only_last_outputs=False)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def unroll(self, horizon, *, init=True, omit_latches=True,
+           only_last_outputs=False):
+    hist_valid = LTL.atom(self.valid_id) \
+                    .historically() \
+                    .with_output(self.valid_id)
+    monitor = BV.aig2aigbv(hist_valid.aig)
+
+    circ = (self.circ &gt;&gt; monitor).unroll(
+        horizon,
+        init=init,
+        omit_latches=omit_latches,
+        only_last_outputs=only_last_outputs
+    )
+
+    if not only_last_outputs:
+        times = range(1, horizon)
+        circ &gt;&gt;= BV.sink(1, (f&#39;{self.valid_id}##time_{t}&#39; for t in times))
+    valid_id = f&#39;{self.valid_id}##time_{horizon}&#39;
+    assert valid_id in circ.outputs
+
+    input_encodings = timed_encodings(self.input_encodings, circ.inputs)
+    output_encodings = timed_encodings(self.output_encodings, circ.outputs)
+    return from_aigbv(
+        circ=circ,
+        input_encodings=input_encodings,
+        output_encodings=output_encodings,
+        valid_id=valid_id,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="aiger_discrete" href="index.html">aiger_discrete</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="aiger_discrete.discrete.from_aigbv" href="#aiger_discrete.discrete.from_aigbv">from_aigbv</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="aiger_discrete.discrete.Encoding" href="#aiger_discrete.discrete.Encoding">Encoding</a></code></h4>
+<ul class="">
+<li><code><a title="aiger_discrete.discrete.Encoding.decode" href="#aiger_discrete.discrete.Encoding.decode">decode</a></code></li>
+<li><code><a title="aiger_discrete.discrete.Encoding.encode" href="#aiger_discrete.discrete.Encoding.encode">encode</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="aiger_discrete.discrete.FiniteFunc" href="#aiger_discrete.discrete.FiniteFunc">FiniteFunc</a></code></h4>
+<ul class="two-column">
+<li><code><a title="aiger_discrete.discrete.FiniteFunc.assume" href="#aiger_discrete.discrete.FiniteFunc.assume">assume</a></code></li>
+<li><code><a title="aiger_discrete.discrete.FiniteFunc.circ" href="#aiger_discrete.discrete.FiniteFunc.circ">circ</a></code></li>
+<li><code><a title="aiger_discrete.discrete.FiniteFunc.input_encodings" href="#aiger_discrete.discrete.FiniteFunc.input_encodings">input_encodings</a></code></li>
+<li><code><a title="aiger_discrete.discrete.FiniteFunc.inputs" href="#aiger_discrete.discrete.FiniteFunc.inputs">inputs</a></code></li>
+<li><code><a title="aiger_discrete.discrete.FiniteFunc.latch2init" href="#aiger_discrete.discrete.FiniteFunc.latch2init">latch2init</a></code></li>
+<li><code><a title="aiger_discrete.discrete.FiniteFunc.latches" href="#aiger_discrete.discrete.FiniteFunc.latches">latches</a></code></li>
+<li><code><a title="aiger_discrete.discrete.FiniteFunc.loopback" href="#aiger_discrete.discrete.FiniteFunc.loopback">loopback</a></code></li>
+<li><code><a title="aiger_discrete.discrete.FiniteFunc.output_encodings" href="#aiger_discrete.discrete.FiniteFunc.output_encodings">output_encodings</a></code></li>
+<li><code><a title="aiger_discrete.discrete.FiniteFunc.outputs" href="#aiger_discrete.discrete.FiniteFunc.outputs">outputs</a></code></li>
+<li><code><a title="aiger_discrete.discrete.FiniteFunc.rename_valid" href="#aiger_discrete.discrete.FiniteFunc.rename_valid">rename_valid</a></code></li>
+<li><code><a title="aiger_discrete.discrete.FiniteFunc.simulate" href="#aiger_discrete.discrete.FiniteFunc.simulate">simulate</a></code></li>
+<li><code><a title="aiger_discrete.discrete.FiniteFunc.simulator" href="#aiger_discrete.discrete.FiniteFunc.simulator">simulator</a></code></li>
+<li><code><a title="aiger_discrete.discrete.FiniteFunc.unroll" href="#aiger_discrete.discrete.FiniteFunc.unroll">unroll</a></code></li>
+<li><code><a title="aiger_discrete.discrete.FiniteFunc.valid_id" href="#aiger_discrete.discrete.FiniteFunc.valid_id">valid_id</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>
