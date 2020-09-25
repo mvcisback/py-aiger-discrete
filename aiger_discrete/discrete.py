@@ -1,8 +1,10 @@
+"""Functions/Classes for modeling Finite Functions as And Inverter Graphs."""
+
 from __future__ import annotations
 
 import re
 from functools import reduce
-from typing import Any, Callable, Optional, Union
+from typing import Any, Callable, Optional, Union, Sequence
 from uuid import uuid1
 
 import aiger_bv as BV
@@ -20,9 +22,9 @@ def fresh():
     return str(uuid1())
 
 
-# TODO: implement py-aiger API
 @attr.s(auto_attribs=True, frozen=True)
 class Encoding:
+    """Encodes/decodes finite domain to and from bit sequences (ints)."""
     encode: Callable[[Any], int] = fn.identity
     decode: Callable[[int], Any] = fn.identity
 
@@ -32,7 +34,7 @@ Encodings = PMap[str, Encoding]
 
 
 @attr.s(auto_attribs=True, frozen=True)
-class DiscreteCirc:
+class FiniteFunc:
     circ: BV.AIGBV
     input_encodings: Encodings = attr.ib(converter=pmap)
     output_encodings: Encodings = attr.ib(converter=pmap)
@@ -44,7 +46,7 @@ class DiscreteCirc:
         elif self.circ.omap[self.valid_id].size != 1:
             raise ValueError("Validation output must be size 1.")
 
-    def rename_valid(self, name: Optional[str] = None) -> DiscreteCirc:
+    def rename_valid(self, name: Optional[str] = None) -> FiniteFunc:
         if name is None:
             name = fresh()
         if name in self.outputs:
@@ -52,7 +54,7 @@ class DiscreteCirc:
         circ = self.circ['o', {self.valid_id: name}]
         return attr.evolve(self, circ=circ, valid_id=name)
 
-    def assume(self, pred: BV.AIGBV) -> DiscreteCirc:
+    def assume(self, pred: BV.AIGBV) -> FiniteFunc:
         assert len(pred.outputs) == 1
         func = from_aigbv(pred.outputs, valid_id=fn.first(pred.outputs))
         return self | func
@@ -77,25 +79,19 @@ class DiscreteCirc:
     simulate = BV.AIGBV.simulate
 
     def __call__(self, inputs, latches=None):
-        imap = {
-            k: self.input_encodings.get(k, DefaultEncoding).encode(v)
-            for k, v in inputs.items()
-        }
-        omap, lmap = self.circ(imap, latches=latches)
+        inputs = encode_inputs(inputs, self.circ.imap, self.input_encodings)
+        omap, lmap = self.circ(dict(inputs), latches=latches)
 
         valid, *_ = omap[self.valid_id]
         if not valid:
             raise ValueError(f"Invalid inputs: {inputs}")
         del omap[self.valid_id]
 
-        omap = {
-            k: self.output_encodings.get(k, DefaultEncoding).decode(v)
-            for k, v in omap.items()
-        }
+        omap = dict(decode_outputs(omap, self.output_encodings))
         return omap, lmap
 
-    def __or__(self, other: Circ) -> DiscreteCirc:
-        other: DiscreteCirc = canon(other)
+    def __or__(self, other: Circ) -> FiniteFunc:
+        other: FiniteFunc = canon(other)
         circ = (self.circ | other.circ) >> both_valid(self, other)
 
         # TODO: project to important inputs.
@@ -106,8 +102,8 @@ class DiscreteCirc:
             valid_id=self.valid_id
         )
 
-    def __rshift__(self, other: Circ) -> DiscreteCirc:
-        other: DiscreteCirc = canon(other)
+    def __rshift__(self, other: Circ) -> FiniteFunc:
+        other: FiniteFunc = canon(other)
         circ = (self.circ >> other.circ) >> both_valid(self, other)
         return from_aigbv(
             circ=circ,
@@ -116,7 +112,7 @@ class DiscreteCirc:
             valid_id=self.valid_id
         )
 
-    def __lshift__(self, other: Circ) -> DiscreteCirc:
+    def __lshift__(self, other: Circ) -> FiniteFunc:
         return canon(other) >> self
 
     def __getitem__(self, others):
@@ -163,6 +159,26 @@ class DiscreteCirc:
         )
 
 
+def encode_inputs(inputs, imap, encodings):
+    for key, val in inputs.items():
+        size = imap[key].size
+        if key in encodings:  # Convert to tuple of bools.
+            val = encodings[key].encode(val)
+
+        assert isinstance(val, int)
+        val = BV.encode_int(size, val, signed=False)
+
+        assert len(val) == size
+        yield key, val
+
+
+def decode_outputs(outputs, encodings):
+    for key, val in outputs.items():
+        val = BV.decode_int(val, signed=False)
+        if key in encodings:
+            val = encodings[key].decode(val)
+        yield key, val
+
 def timed_encodings(old_encodings, timed_names):
     encodings = {}
     for timed_name in timed_names:
@@ -170,18 +186,19 @@ def timed_encodings(old_encodings, timed_names):
         if name not in old_encodings:
             continue
         encodings[timed_name] = old_encodings[name]
+
     return encodings
 
 
-Circ = Union[DiscreteCirc, BV.AIGBV]
+Circ = Union[FiniteFunc, BV.AIGBV]
 
 
-def both_valid(left: DiscreteCirc, right: DiscreteCirc) -> BV.AIGBV:
+def both_valid(left: FiniteFunc, right: FiniteFunc) -> BV.AIGBV:
     return (left._vexpr & right._vexpr).with_output(left.valid_id).aigbv
 
 
-def canon(circ: Circ) -> DiscreteCirc:
-    if not isinstance(circ, DiscreteCirc):
+def canon(circ: Circ) -> FiniteFunc:
+    if not isinstance(circ, FiniteFunc):
         circ = from_aigbv(circ)
     return circ.rename_valid()
 
@@ -197,7 +214,17 @@ def project(mapping, keys):
 def from_aigbv(circ: BV.AIGBV,
                input_encodings: Encodings = None,
                output_encodings: Encodings = None,
-               valid_id="##valid") -> DiscreteCirc:
+               valid_id="##valid") -> FiniteFunc:
+    """Lift an bit-vector into a function over finite sets.
+
+    Note: if `valid_id` is not present as an output of `circ`, then it
+      will be added, and will always output True.
+
+    Args:
+     - input_encodings: Maps an input to an encoder. Default is identity.
+     - output_encodings: Maps an output to an encoder. Default is identity.
+     - valid_id: Denotes which output monitors if inputs are "valid".
+    """
     if input_encodings is None:
         input_encodings = {}
     if output_encodings is None:
@@ -208,7 +235,7 @@ def from_aigbv(circ: BV.AIGBV,
     input_encodings = project(input_encodings, circ.inputs)
     output_encodings = project(output_encodings, circ.outputs - {valid_id})
 
-    return DiscreteCirc(
+    return FiniteFunc(
         circ=circ,
         input_encodings=input_encodings,
         output_encodings=output_encodings,
@@ -216,4 +243,4 @@ def from_aigbv(circ: BV.AIGBV,
     )
 
 
-__all__ = ['Encoding', 'DiscreteCirc', 'from_aigbv']
+__all__ = ['Encoding', 'FiniteFunc', 'from_aigbv']
