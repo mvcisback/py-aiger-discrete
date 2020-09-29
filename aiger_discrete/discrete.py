@@ -55,13 +55,29 @@ class FiniteFunc:
         return attr.evolve(self, circ=circ, valid_id=name)
 
     def assume(self, pred: BV.AIGBV) -> FiniteFunc:
-        assert len(pred.outputs) == 1
-        func = from_aigbv(pred.outputs, valid_id=fn.first(pred.outputs))
+        assert len(pred.outputs) == 1        
+        func = from_aigbv(pred, valid_id=fn.first(pred.outputs))
         return self | func
+
+    @property
+    def aigbv(self):
+        return self.circ
+
+    @property
+    def aig(self):
+        return self.circ.aig
 
     @property
     def _vexpr(self):
         return BV.uatom(1, self.valid_id)
+
+    @property
+    def imap(self):
+        return self.circ.imap.omit([self.valid_id])
+
+    @property
+    def omap(self):
+        return self.circ.omap.omit([self.valid_id])
 
     @property
     def inputs(self): return self.circ.inputs
@@ -119,7 +135,22 @@ class FiniteFunc:
         kind, relabels = others
         if kind == 'o' and self.valid_id in relabels:
             raise ValueError("Use rename_valid to change valid_id.")
-        return attr.evolve(self, circ=self.circ[others])
+
+        kwargs = {}
+        if kind == 'o':
+            key, encodings = 'output_encodings', self.output_encodings
+        elif kind == 'i':
+            key, encodings = 'input_encodings', self.input_encodings
+
+        evolver = encodings.evolver()
+        for old, new in relabels.items():
+            if old not in encodings:
+                continue
+            evolver[new] = encodings[old]
+            del evolver[old]
+        kwargs[key] = evolver.persistent()
+
+        return attr.evolve(self, circ=self.circ[others], **kwargs)
 
     def _encode_wiring(self, wiring):
         if 'init' not in wiring:
