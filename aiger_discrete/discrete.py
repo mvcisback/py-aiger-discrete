@@ -55,7 +55,7 @@ class FiniteFunc:
         return attr.evolve(self, circ=circ, valid_id=name)
 
     def assume(self, pred: BV.AIGBV) -> FiniteFunc:
-        assert len(pred.outputs) == 1        
+        assert len(pred.outputs) == 1
         func = from_aigbv(pred, valid_id=fn.first(pred.outputs))
         return self | func
 
