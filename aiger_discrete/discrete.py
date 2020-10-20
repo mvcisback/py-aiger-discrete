@@ -239,7 +239,7 @@ def decode_outputs(outputs, encodings):
 def timed_encodings(old_encodings, timed_names):
     encodings = {}
     for timed_name in timed_names:
-        name = TIMED_NAME.match(timed_name).group()[0]
+        name = TIMED_NAME.match(timed_name).groups()[0]
         if name not in old_encodings:
             continue
         encodings[timed_name] = old_encodings[name]
