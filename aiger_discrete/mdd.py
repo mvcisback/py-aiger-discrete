@@ -11,16 +11,6 @@ from aiger_bv.bundle import Bundle
 from aiger_discrete import Encoding, FiniteFunc
 
 
-def cone(circ: BV.AIGBV, output: str) -> BV.AIGBV:
-    """Return cone of influence aigbv output."""
-    for out in circ.outputs - {output}:
-        size = circ.omap[out].size
-        circ >>= BV.sink(size, [out])
-    assert len(circ.outputs) == 1
-    assert fn.first(circ.outputs) == output
-    return circ
-
-
 def to_var(bdl: Bundle, encoding: Optional[Encoding]) -> mdd.Variable:
     if encoding is None:
         encoding = Encoding()
@@ -47,7 +37,7 @@ def to_mdd(func: FiniteFunc, manager=None) -> mdd.DecisionDiagram:
     # TODO: currently assuming 1-hot.
     assert len(func.outputs) == 1
     output = fn.first(func.outputs)
-    expr = BV.UnsignedBVExpr(cone(func.circ, output))
+    expr = BV.UnsignedBVExpr(func.circ.cone(output))
     output = to_var(func.circ.omap[output], func.output_encodings.get(output))
 
     imap = func.circ.imap
@@ -59,7 +49,7 @@ def to_mdd(func: FiniteFunc, manager=None) -> mdd.DecisionDiagram:
     interface = mdd.Interface(
         inputs=inputs,
         output=output,
-        valid=BV.UnsignedBVExpr(cone(func.circ, func.valid_id)),
+        valid=BV.UnsignedBVExpr(func.circ.cone(func.valid_id)),
     )
 
     return interface.lift(onehot_output(expr))
