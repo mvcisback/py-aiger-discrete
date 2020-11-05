@@ -318,7 +318,7 @@ description = "Python abstraction around Binary Decision Diagrams to implement M
 name = "mdd"
 optional = false
 python-versions = ">=3.7,<4.0"
-version = "0.3.1"
+version = "0.3.3"
 
 [package.dependencies]
 dd = ">=0.5.5,<0.6.0"
@@ -474,7 +474,7 @@ description = "A python library for manipulating sequential and-inverter gates."
 name = "py-aiger-bv"
 optional = false
 python-versions = ">=3.7,<4.0"
-version = "4.4.0"
+version = "4.5.0"
 
 [package.dependencies]
 attrs = ">=20.0.0,<21.0.0"
@@ -698,7 +698,7 @@ testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pyt
 mdd = ["mdd"]
 
 [metadata]
-content-hash = "1685d3555304935ee9f5b329300eb3da6557b8d4404de0f4151e26ac82dc6baf"
+content-hash = "72fbb0dc76dda6b305639af8cc04afd87dbf7937796df3159e3bb55a28a5096c"
 lock-version = "1.0"
 python-versions = "^3.7"
 
@@ -870,8 +870,8 @@ mccabe = [
     {file = "mccabe-0.6.1.tar.gz", hash = "sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f"},
 ]
 mdd = [
-    {file = "mdd-0.3.1-py3-none-any.whl", hash = "sha256:7c77e269e62d66e10003a86345cf3b408cda0ed5a5035fcf8ba45b4543741f5e"},
-    {file = "mdd-0.3.1.tar.gz", hash = "sha256:7eaab5318aa2ff1ee49f10e5eed2f23f4353bd2b36cbb63acecb2eeaed37e25c"},
+    {file = "mdd-0.3.3-py3-none-any.whl", hash = "sha256:6a9d5e6ace9d97399d2b3d1846f99ad9852fe440331b8b9bfa2c0c5f5dbd6d8a"},
+    {file = "mdd-0.3.3.tar.gz", hash = "sha256:ba98fed5fc5d53f580229eb7f0100e1db54cfd04fc5311cf0887ea9ea2bd0cc1"},
 ]
 networkx = [
     {file = "networkx-2.5-py3-none-any.whl", hash = "sha256:8c5812e9f798d37c50570d15c4a69d5710a18d77bafc903ee9c5fba7454c616c"},
@@ -920,8 +920,8 @@ py-aiger-bdd = [
     {file = "py_aiger_bdd-3.0.1-py3-none-any.whl", hash = "sha256:96e5d314379334a4099087fcce67072eb88c82d181708c297cf54258514d4236"},
 ]
 py-aiger-bv = [
-    {file = "py-aiger-bv-4.4.0.tar.gz", hash = "sha256:0313462991488757234d9679f1fbdf493f9b17ceab9d78df14dd6b258d69c6ed"},
-    {file = "py_aiger_bv-4.4.0-py3-none-any.whl", hash = "sha256:e8e7a908732aa98f347411778bd170e806b04d5c11df4aa5c83827f9e27aecf7"},
+    {file = "py-aiger-bv-4.5.0.tar.gz", hash = "sha256:16770c9193c0b2c8769b0ba4534469ce2745a8b607b779336483c8514d2746b1"},
+    {file = "py_aiger_bv-4.5.0-py3-none-any.whl", hash = "sha256:20c6f9bcb7af49a8023ff53272a71c04aab556b63dcdfde13e138c6a4bc59554"},
 ]
 py-aiger-ptltl = [
     {file = "py-aiger-ptltl-3.0.1.tar.gz", hash = "sha256:fc5356ee2c184b6b9e3217ffe3bf69adc917f404ebef82a0948428bd3df34833"},

@@ -33,7 +33,11 @@ def onehot_output(expr):
     return reduce(ite, range(1, expr.size), bits[0])
 
 
-def to_mdd(func: FiniteFunc, manager=None) -> mdd.DecisionDiagram:
+def to_mdd(func: FiniteFunc, manager=None, order=None) -> mdd.DecisionDiagram:
+    if order is None:
+        order = func.circ.inputs
+    order = list(order)
+
     # TODO: currently assuming 1-hot.
     assert len(func.outputs) == 1
     output = fn.first(func.outputs)
@@ -42,9 +46,8 @@ def to_mdd(func: FiniteFunc, manager=None) -> mdd.DecisionDiagram:
 
     imap = func.circ.imap
     input_encodings = func.input_encodings
-    inputs = {
-        k: to_var(imap[k], input_encodings.get(k)) for k in func.circ.inputs
-    }
+
+    inputs = {k: to_var(imap[k], input_encodings.get(k)) for k in order}
 
     interface = mdd.Interface(
         inputs=inputs,
@@ -52,4 +55,4 @@ def to_mdd(func: FiniteFunc, manager=None) -> mdd.DecisionDiagram:
         valid=BV.UnsignedBVExpr(func.circ.cone(func.valid_id)),
     )
 
-    return interface.lift(onehot_output(expr))
+    return interface.lift(onehot_output(expr), order=order + [output.name])

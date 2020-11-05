@@ -12,11 +12,11 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.7"
-py-aiger-bv = "^4.4.0"
+py-aiger-bv = "^4.5.0"
 funcy = "^1.14"
 pyrsistent = "^0.17.3"
 py-aiger-ptltl = "^3.0.1"
-mdd = {version = "^0.3.1", optional = true}
+mdd = {version = "^0.3.3", optional = true}
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.0.1"
@@ -25,7 +25,7 @@ hypothesis = "^5.30.0"
 pytest-cov = "^2.10.1"
 codecov = "^2.1.9"
 pdoc3 = "^0.9.1"
-mdd = "^0.3.1"
+mdd = "^0.3.3"
 
 [tool.poetry.extras]
 mdd = ["mdd"]
