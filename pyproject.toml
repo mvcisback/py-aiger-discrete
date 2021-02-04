@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "py-aiger-discrete"
-version = "0.1.6"
+version = "0.1.7"
 description = "Library for modeling functions over discrete sets using aiger circuits."
 authors = ["Marcell Vazquez-Chanlatte <mvc@linux.com>"]
 license = "MIT"

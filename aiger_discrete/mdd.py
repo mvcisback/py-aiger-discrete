@@ -34,6 +34,7 @@ def onehot_output(expr):
 
 
 def to_mdd(func: FiniteFunc, manager=None, order=None) -> mdd.DecisionDiagram:
+    reordering_allowed = order is None
     if order is None:
         order = func.circ.inputs
     order = list(order)
@@ -54,5 +55,8 @@ def to_mdd(func: FiniteFunc, manager=None, order=None) -> mdd.DecisionDiagram:
         output=output,
         valid=BV.UnsignedBVExpr(func.circ.cone(func.valid_id)),
     )
-
-    return interface.lift(onehot_output(expr), order=order + [output.name])
+    
+    dd = interface.lift(onehot_output(expr), order=order + [output.name])
+    if not reordering_allowed:
+        dd.bdd.bdd.configure(reordering=False)
+    return dd
