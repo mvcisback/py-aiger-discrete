@@ -55,7 +55,7 @@ def to_mdd(func: FiniteFunc, manager=None, order=None) -> mdd.DecisionDiagram:
         output=output,
         valid=BV.UnsignedBVExpr(func.circ.cone(func.valid_id)),
     )
-    
+
     dd = interface.lift(onehot_output(expr), order=order + [output.name])
     if not reordering_allowed:
         dd.bdd.bdd.configure(reordering=False)
