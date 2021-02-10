@@ -137,6 +137,9 @@ class FiniteFunc:
         if kind == 'o' and self.valid_id in relabels:
             raise ValueError("Use rename_valid to change valid_id.")
 
+        if kind == 'l':
+            return attr.evolve(self, circ=self.circ[others])
+
         kwargs = {}
         if kind == 'o':
             key, encodings = 'output_encodings', self.output_encodings
