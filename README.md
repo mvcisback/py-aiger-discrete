@@ -3,7 +3,6 @@ Library for modeling functions over discrete sets using aiger circuits.
 
 [![Build Status](https://cloud.drone.io/api/badges/mvcisback/py-aiger-discrete/status.svg)](https://cloud.drone.io/mvcisback/py-aiger-discrete)
 [![docs badge](https://img.shields.io/badge/docs-docs-black)](https://mjvc.me/py-aiger-discrete)
-[![codecov](https://codecov.io/gh/mvcisback/py-aiger-discrete/branch/main/graph/badge.svg)](https://codecov.io/gh/mvcisback/py-aiger-discrete)
 [![PyPI version](https://badge.fury.io/py/py-aiger_discrete.svg)](https://badge.fury.io/py/py-aiger-discrete)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
